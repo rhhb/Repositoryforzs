@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.bjsxt.mapper.EquipTableMapper">
+  		<!--根据设备编号、设备名称、部门名称进行查询 -->
+     <select id="selByEnoEnameDept" resultType="EquipTable" >
+     	select unifiedcode,createdate,equipname,models,product,supervisory_level,deptname,manufacture_number,manufacture_date,commissioning_date from equip_table 
+     	<where>
+     		<if test="unifiedcode!=null and unifiedcode!=''">
+     			and unifiedcode=#{unifiedcode} 
+     		</if>
+     		<if test="equipname!=null and equipname!=''">
+     			and equipname=#{equipname} 
+     		</if>
+     		<if test="deptname!=null and deptname!=''">
+     			and deptname=#{deptname} 
+     		</if>
+     	</where>
+     	limit #{pageStart},#{pageSize}
+     </select>
+     <!--根据设备编号、设备名称、部门名称查询的总数 -->
+     <select id="selByEnoEnameDeptCount" resultType="long" >
+     	select count(*) from equip_table 
+     	<where>
+     		<if test="unifiedcode!=null and unifiedcode!=''">
+     			and unifiedcode=#{unifiedcode} 
+     		</if>
+     		<if test="equipname!=null and equipname!=''">
+     			and equipname=#{equipname} 
+     		</if>
+     		<if test="deptname!=null and deptname!=''">
+     			and deptname=#{deptname} 
+     		</if>
+     	</where>     	
+     </select>
+     <!--查询设备编码 -->
+     <select id="selUnifiedcode" resultType="EquipTable" >
+     	select unifiedcode from equip_table
+     </select>
+       <!--新增设备 -->
+       <insert id="insEquip" parameterType="EquipTable" >
+     	insert into equip_table
+     	<trim  prefix="(id," suffix=")" suffixOverrides=",">
+     	
+     	<if test="unifiedcode!=null and unifiedcode!=''">
+     		unifiedcode,
+     	</if>
+     	<if test="createdate!=null and createdate!='' ">
+     		createdate,
+     	</if>
+     	<if test="equipname!=null and equipname!=''">
+     		equipname,
+     	</if>
+     	<if test="models!=null and models!=''">
+     		models,
+     	</if>
+     	<if test="product!=null and product!=''">
+     		product,
+     	</if>
+     	<if test="supervisory_level!=null and supervisory_level!=''">
+     		supervisory_level,
+     	</if>
+     	<if test="deptname!=null and deptname!=''">
+     		deptname,
+     	</if>
+     	<if test="manufacture_number!=null and manufacture_number!=''">
+     		manufacture_number,
+     	</if>
+     	<if test="manufacture_date!=null and manufacture_date!=''">
+     		manufacture_date,
+     	</if>
+     	<if test="commissioning_date!=null and commissioning_date!=''">
+     		commissioning_date,
+     	</if>
+     	<if test="use_info!=null and use_info!=''">
+     		use_info,
+     	</if>
+     	<if test="now_status!=null and now_status!=''">
+     		now_status,
+     	</if>
+     	<if test="installation_site!=null and installation_site!=''">
+     		installation_site,
+     	</if>
+     	<if test="original_value!=null and original_value!=''">
+     		original_value,
+     	</if>
+     	<if test="depreciation_rate!=null and depreciation_rate!=''">
+     		depreciation_rate,
+     	</if>
+     	<if test="durable_year!=null and durable_year!=''">
+     		durable_year,
+     	</if>
+     	<if test="design_capability!=null and design_capability!=''">
+     		design_capability,
+     	</if>
+     	<if test="equip_use!=null and equip_use!=''">
+     		equip_use,
+     	</if>
+     	<if test="sign!=null and sign!=''">
+     		sign,
+     	</if>
+     	<if test="change_unifiedcode!=null and change_unifiedcode!=''">
+     		change_unifiedcode,
+     	</if>
+     	<if test="technical_paraments!=null and technical_paraments!=''">
+     		technical_paraments,
+     	</if>
+     	<if test="accessory_equipment!=null and accessory_equipment!=''">
+     		accessory_equipment,
+     	</if>
+     	<if test="accessory_equipment_change!=null and accessory_equipment_change!=''">
+     		accessory_equipment_change,
+     	</if>
+     	<if test="attach_documentation!=null and attach_documentation!=''">
+     		attach_documentation,
+     	</if>
+     	<if test="change_info!=null and change_info!=''">
+     		change_info,
+     	</if>
+     	<if test="parts_model!=null and parts_model!=''">
+     		parts_model,
+     	</if>
+     	<if test="service_record!=null and service_record!=''">
+     		service_record,
+     	</if>
+     	<if test="scrap_sign!=null and scrap_sign!=''">
+     		scrap_sign,
+     	</if>
+     	<if test="deptno!=null and deptno!=''">
+     		deptno,
+     	</if>
+     	</trim>   	
+     	<trim prefix="values(default," suffix=")" suffixOverrides=",">
+
+     	<if test="unifiedcode!=null and unifiedcode!=''">
+     		#{unifiedcode},
+     	</if>
+     	<if test="createdate!=null and createdate!=''">
+     		#{createdate},
+     	</if>
+     	<if test="equipname!=null and equipname!=''">
+     		#{equipname},
+     	</if>
+     	<if test="models!=null and models!=''">
+     		#{models},
+     	</if>
+     	<if test="product!=null and product!=''">
+     		#{product},
+     	</if>
+     	<if test="supervisory_level!=null and supervisory_level!=''">
+     		#{supervisory_level},
+     	</if>
+     	<if test="deptname!=null and deptname!=''">
+     		#{deptname},
+     	</if>
+     	<if test="manufacture_number!=null and manufacture_number!=''">
+     		#{manufacture_number},
+     	</if>
+     	<if test="manufacture_date!=null and manufacture_date!=''">
+     		#{manufacture_date},
+     	</if>
+     	<if test="commissioning_date!=null and commissioning_date!=''">
+     		#{commissioning_date},
+     	</if>
+     	<if test="use_info!=null and use_info!=''">
+     		#{use_info},
+     	</if>
+     	<if test="now_status!=null and now_status!=''">
+     		#{now_status},
+     	</if>
+     	<if test="installation_site!=null and installation_site!=''">
+     		#{installation_site},
+     	</if>
+     	<if test="original_value!=null and original_value!=''">
+     		#{original_value},
+     	</if>
+     	<if test="depreciation_rate!=null and depreciation_rate!=''">
+     		#{depreciation_rate},
+     	</if>
+     	<if test="durable_year!=null and durable_year!=''">
+     		#{durable_year},
+     	</if>
+     	<if test="design_capability!=null and design_capability!=''">
+     		#{design_capability},
+     	</if>
+     	<if test="equip_use!=null and equip_use!=''">
+     		#{equip_use},
+     	</if>
+     	<if test="sign!=null and sign!=''">
+     		#{sign},
+     	</if>
+     	<if test="change_unifiedcode!=null and change_unifiedcode!=''">
+     		#{change_unifiedcode},
+     	</if>
+     	<if test="technical_paraments!=null and technical_paraments!=''">
+     		#{technical_paraments},
+     	</if>
+     	<if test="accessory_equipment!=null and accessory_equipment!=''">
+     		#{accessory_equipment},
+     	</if>
+     	<if test="accessory_equipment_change!=null and accessory_equipment_change!=''">
+     		#{accessory_equipment_change},
+     	</if>
+     	<if test="attach_documentation!=null and attach_documentation!=''">
+     		#{attach_documentation},
+     	</if>
+     	<if test="change_info!=null and change_info!=''">
+     		#{change_info},
+     	</if>
+     	<if test="parts_model!=null and parts_model!=''">
+     		#{parts_model},
+     	</if>
+     	<if test="service_record!=null and service_record!=''">
+     		#{service_record},
+     	</if>
+     	<if test="scrap_sign!=null and scrap_sign!=''">
+     		#{scrap_sign},
+     	</if>
+     	<if test="deptno!=null and deptno!=''">
+     		#{deptno},
+     	</if>
+     	</trim>
+     </insert>
+     <!--查询全部设备信息 -->
+     <select id="selAll" resultType="EquipTable">
+     	select * from equip_table
+     </select>
+     <!--分页查询设备 -->
+     <select id="selByPage"  resultType="EquipTable" >
+     	select * from equip_table limit #{pageStart},#{pageSize}
+     </select>
+     <!--查询总数 -->
+     <select id="selCount" resultType="long">
+     	select count(*) from equip_table
+     </select>
+     
+  </mapper>
