@@ -1,14 +1,21 @@
 package com.bjsxt.excel.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
@@ -34,10 +42,15 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
 
 import com.bjsxt.pojo.Emp;
 
@@ -316,4 +329,290 @@ public class ExcelUtil {
 		}
 		return message;
 	}
+	
+	//导出excel文件
+	/**
+     * 利用JAVA的反射机制，将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上<br>
+     * 用于单个sheet
+     *
+     * @param <T>
+     * @param headers   表格属性列名数组
+     * @param dataset   需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的
+     *                  javabean属性的数据类型有基本数据类型及String,Date,String[],Double[]
+     * @param filePath  excel文件输出路径     
+     */
+    public static <T> void exportExcel(String[] headers, Collection<T> dataset, String filePath) {
+        exportExcel(headers, dataset, filePath, null);
+    }
+
+    /**
+     * 利用JAVA的反射机制，将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上<br>
+     * 用于单个sheet
+     *
+     * @param <T>
+     * @param headers 表格属性列名数组
+     * @param dataset 需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的
+     *                javabean属性的数据类型有基本数据类型及String,Date,String[],Double[]
+     * @param filePath  excel文件输出路径
+     * @param pattern 如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
+     */
+    public static <T> void exportExcel(String[] headers, Collection<T> dataset, String filePath, String pattern) {
+        try {
+            // 声明一个工作薄
+            Workbook workbook = new HSSFWorkbook();
+            if (workbook != null) {
+                // 生成一个表格
+                Sheet sheet = workbook.createSheet();
+
+                write2Sheet(sheet, headers, dataset, pattern);
+                OutputStream out = new FileOutputStream(new File(filePath));
+                workbook.write(out);
+                out.close();
+            }
+        } catch (IOException e) {
+//            mLogger.error(e.toString(), e);
+        	e.printStackTrace();
+        }
+    }
+
+    /**
+     * 导出数据到Excel文件
+     * @param dataList 要输出到Excel文件的数据集
+     * @param filePath  excel文件输出路径
+     */
+    public static void exportExcel(String[][] dataList, String filePath) {
+        try {
+            // 声明一个工作薄
+            Workbook workbook =  new HSSFWorkbook();
+            if (workbook != null) {
+                // 生成一个表格
+                Sheet sheet = workbook.createSheet();
+
+                for (int i = 0; i < dataList.length; i++) {
+                    String[] r = dataList[i];
+                    Row row = sheet.createRow(i);
+                    for (int j = 0; j < r.length; j++) {
+                        Cell cell = row.createCell(j);
+                        // cell max length 32767
+                        if (r[j].length() > 32767) {
+//                            mLogger.warn("异常处理", "--此字段过长(超过32767),已被截断--" + r[j]);
+                            r[j] = r[j].substring(0, 32766);
+                        }
+                        cell.setCellValue(r[j]);
+                    }
+                }
+                // 自动列宽
+                if (dataList.length > 0) {
+                    int colcount = dataList[0].length;
+                    for (int i = 0; i < colcount; i++) {
+                        sheet.autoSizeColumn(i);
+                    }
+                }
+                OutputStream out = new FileOutputStream(new File(filePath));
+                workbook.write(out);
+                out.close();
+            }
+        } catch (IOException e) {
+//            mLogger.error(e.toString(), e);
+        	e.printStackTrace();
+        }
+    }
+
+    /**
+     * 利用JAVA的反射机制，将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上<br>
+     * 用于多个sheet
+     * @param sheets ExcelSheet的集体
+     * @param filePath excel文件路径
+     */
+    public static <T> void exportExcel(List<ExcelSheet<T>> sheets, String filePath) {
+        exportExcel(sheets, filePath, null);
+    }
+
+    /**
+     * 利用JAVA的反射机制，将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上<br>
+     * 用于多个sheet
+     *
+     * @param sheets    ExcelSheet的集合
+     * @param filePath  excel文件输出路径
+     * @param pattern   如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
+     */
+    public static <T> void exportExcel(List<ExcelSheet<T>> sheets, String filePath, String pattern) {
+        if (CollectionUtils.isEmpty(sheets)) {
+            return;
+        }
+        try {
+            // 声明一个工作薄
+            Workbook workbook = new HSSFWorkbook();
+            if (workbook != null) {
+                for (ExcelSheet<T> sheetInfo : sheets) {
+                    // 生成一个表格
+                    Sheet sheet = workbook.createSheet(sheetInfo.getSheetName());
+                    write2Sheet(sheet, sheetInfo.getHeaders(), sheetInfo.getDataset(), pattern);
+                }
+                OutputStream out = new FileOutputStream(new File(filePath));
+                workbook.write(out);
+                out.close();
+            }
+        } catch (IOException e) {
+//            mLogger.error(e.toString(), e);
+        	e.printStackTrace();
+        }
+    }
+
+    /**
+     * 每个sheet的写入
+     * @param sheet   页签
+     * @param headers 表头
+     * @param dataset 数据集合
+     * @param pattern 日期格式
+     */
+    public static <T> void write2Sheet(Sheet sheet, String[] headers, Collection<T> dataset, String pattern) {
+        // 产生表格标题行
+        Row row = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        // 遍历集合数据，产生数据行
+        Iterator<T> it = dataset.iterator();
+        int index = 0;
+        while (it.hasNext()) {
+            index++;
+            row = sheet.createRow(index);
+            T t = (T) it.next();
+            if (t instanceof Map) { // row data is map
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) t;
+                int cellNum = 0;
+                for (String k : headers) {
+                    if (map.containsKey(k) == false) {
+//                        mLogger.error("Map 中 不存在 key [" + k + "]");
+                        continue;
+                    }
+                    Cell cell = row.createCell(cellNum);
+                    Object value = map.get(k);
+                    if (value == null) {
+                        cell.setCellValue(StringUtils.EMPTY);
+                    } else {
+                        cell.setCellValue(String.valueOf(value));
+                    }
+                    cellNum++;
+                }
+            } else if (t instanceof Object[]) { // row data is Object[]
+                Object[] tObjArr = (Object[]) t;
+                for (int i = 0; i < tObjArr.length; i++) {
+                    Cell cell = row.createCell(i);
+                    Object value = tObjArr[i];
+                    if (value == null) {
+                        cell.setCellValue(StringUtils.EMPTY);
+                    } else {
+                        cell.setCellValue(String.valueOf(value));
+                    }
+                }
+            } else if (t instanceof List<?>) { // row data is List
+                List<?> rowData = (List<?>) t;
+                for (int i = 0; i < rowData.size(); i++) {
+                    Cell cell = row.createCell(i);
+                    Object value = rowData.get(i);
+                    if (value == null) {
+                        cell.setCellValue(StringUtils.EMPTY);
+                    } else {
+                        cell.setCellValue(String.valueOf(value));
+                    }
+                }
+            } else { // row data is vo
+                // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
+                Field[] fields = t.getClass().getDeclaredFields();
+                for (int i = 0; i < fields.length; i++) {
+                    Cell cell = row.createCell(i);
+                    Field field = fields[i];
+                    String fieldName = field.getName();
+                    String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+                    try {
+                        Class<?> tClazz = t.getClass();
+                        Method getMethod = tClazz.getMethod(getMethodName, new Class[] {});
+                        Object value = getMethod.invoke(t, new Object[] {});
+                        String textValue = null;
+                        if (value instanceof Integer) {
+                            int intValue = (Integer) value;
+                            cell.setCellValue(intValue);
+                        } else if (value instanceof Float) {
+                            float fValue = (Float) value;
+                            cell.setCellValue(fValue);
+                        } else if (value instanceof Double) {
+                            double dValue = (Double) value;
+                            cell.setCellValue(dValue);
+                        } else if (value instanceof Long) {
+                            long longValue = (Long) value;
+                            cell.setCellValue(longValue);
+                        } else if (value instanceof Boolean) {
+                            boolean bValue = (Boolean) value;
+                            cell.setCellValue(bValue);
+                        } else if (value instanceof Date) {
+                            Date date = (Date) value;
+                            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                            textValue = sdf.format(date);
+                        } else {
+                            // 其它数据类型都当作字符串简单处理
+                            textValue = value.toString();
+                        }
+                        if (textValue != null) {
+                            // HSSFRichTextString richString = new
+                            // HSSFRichTextString(textValue);
+                            cell.setCellValue(textValue);
+                        } else {
+                            cell.setCellValue(StringUtils.EMPTY);
+                        }
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+        // 设定自动宽度
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
+
+    /**
+     * EXCEL文件下载
+     * @param path
+     * @param response
+     */
+    public static void download(String path, HttpServletResponse response) {
+        try {
+            // path是指欲下载的文件的路径。
+            File file = new File(path);
+            // 取得文件名。
+            String filename = file.getName();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/vnd.ms-excel;charset=gb2312");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
