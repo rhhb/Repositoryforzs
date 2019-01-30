@@ -1,5 +1,6 @@
 package com.bjsxt.mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
@@ -14,4 +15,6 @@ public interface RoleMapper {
 	int selCount();
 	@Update("update role set name=#{name},sort=#{sort},remark=#{remark} where id=#{id}")
 	int updRole(Role role);
+	@Select("select * from role")
+	Collection<Role> showAll();
 }

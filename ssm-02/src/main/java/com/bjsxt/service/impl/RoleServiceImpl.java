@@ -1,6 +1,7 @@
 package com.bjsxt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -62,6 +63,12 @@ public class RoleServiceImpl implements RoleService {
 			menu.setChildren(listChildren);
 		}
 		return listAll;
+	}
+
+	@Override
+	public Collection<Role> showAll() {
+		// TODO Auto-generated method stub
+		return roleMapper.showAll();
 	}
 	
 }

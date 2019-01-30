@@ -1,5 +1,6 @@
 package com.bjsxt.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.bjsxt.pojo.EasyUIDatagrid;
@@ -13,4 +14,6 @@ public interface RoleService {
 	
 	
 	List<Menu> showPrivilege(int roleid);
+	
+	Collection<Role> showAll();
 }

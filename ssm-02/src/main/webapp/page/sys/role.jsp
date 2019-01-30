@@ -87,14 +87,30 @@ $(function(){
 			iconCls: 'icon-excel',
 			text:'导出excel',
 			handler: function(){
-				
-				var info=$("#role_table").datagrid("getData");
-				//这里举例获取某列所有数据的和，当然你也可以进行其它处理或遍历操作
-				var total=0;
-				for(var i=0;i<info.rows.length;i++){
-					total=info.rows[i].name;  //假设Table中有列名number
-					alert(total);
+				if($("#role_table").datagrid("getSelections").length==0){
+					$('#role_dialog').dialog({
+						title: '导出excel',
+						width: 200,    
+					    height: 120,    
+					    closed: false,    
+					    cache: false,
+						href: 'sys/role_excel.jsp',
+							modal: true
+					});
+				}else{
+					$.messager.alert("系统信息","请勿选择<b style='color:red;'>行</b>")
 				}
+					
+				
+				
+// 					alert('正在建设中')
+// 				var info=$("#role_table").datagrid("getData");
+				//这里举例获取某列所有数据的和，当然你也可以进行其它处理或遍历操作
+// 				var total=0;
+// 				for(var i=0;i<info.rows.length;i++){
+// 					total=info.rows[i].name;  //假设Table中有列名number
+// 					alert(total);
+// 				}
 // 				$("#AllAmount").text("total")
 
 

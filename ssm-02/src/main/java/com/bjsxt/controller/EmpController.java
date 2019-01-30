@@ -67,7 +67,7 @@ public class EmpController {
 		System.out.println(dataset);
 //		String tilte = "emp表";
 //		System.out.println("控制层.......");
-		String[] headers = {"id","name","sex","email","depr_id"};
+		String[] headers = {"id","姓名","性别","邮箱","部门编号"};
 //		String[] Col = {"id","name","sex","email","depr_id"};
 		
 		String message = ExcelUtil.exportExcel(request, response, headers, dataset);;
