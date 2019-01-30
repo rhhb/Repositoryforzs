@@ -330,7 +330,7 @@ public class ExcelUtil {
 		return message;
 	}
 	
-	//导出excel文件
+	//导出excel文件 通用方法
 	/**
      * 利用JAVA的反射机制，将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上<br>
      * 用于单个sheet
@@ -341,8 +341,9 @@ public class ExcelUtil {
      *                  javabean属性的数据类型有基本数据类型及String,Date,String[],Double[]
      * @param filePath  excel文件输出路径     
      */
-    public static <T> void exportExcel(String[] headers, Collection<T> dataset, String filePath) {
-        exportExcel(headers, dataset, filePath, null);
+    public static <T> String exportExcel(HttpServletRequest request, HttpServletResponse response,String[] headers, Collection<T> dataset) {
+        exportExcel(request,response,headers, dataset, null);
+		return "success";
     }
 
     /**
@@ -356,18 +357,54 @@ public class ExcelUtil {
      * @param filePath  excel文件输出路径
      * @param pattern 如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
      */
-    public static <T> void exportExcel(String[] headers, Collection<T> dataset, String filePath, String pattern) {
+    public static <T> void exportExcel(HttpServletRequest request, HttpServletResponse response,String[] headers, Collection<T> dataset, String pattern) {
         try {
-            // 声明一个工作薄
-            Workbook workbook = new HSSFWorkbook();
+        	String dir = request.getSession().getServletContext().getRealPath("/output");
+    		File fileLocation = new File(dir);
+    		if (!fileLocation.exists()) {
+    			boolean isCreated = fileLocation.mkdir();
+    			if (!isCreated) {
+    			}
+    		}
+    		String webUrl = request.getSession().getServletContext().getRealPath("/output");
+    		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd mm-ss");
+    		String createExcelname = df.format(new Date()) + "OutputExcel.xls";
+    		String outputFile = webUrl + File.separator + createExcelname;
+        	// 声明一个工作薄
+            @SuppressWarnings("resource")
+			Workbook workbook = new HSSFWorkbook();
             if (workbook != null) {
                 // 生成一个表格
                 Sheet sheet = workbook.createSheet();
 
                 write2Sheet(sheet, headers, dataset, pattern);
-                OutputStream out = new FileOutputStream(new File(filePath));
-                workbook.write(out);
-                out.close();
+                FileOutputStream fOut = new FileOutputStream(outputFile);
+        		workbook.write(fOut);
+        		fOut.flush();
+        		fOut.close();
+        		File f = new File(outputFile);
+        		if (f.exists() && f.isFile()) {
+        			try {
+        				FileInputStream fis = new FileInputStream(f);
+        				URLEncoder.encode(f.getName(), "utf-8");
+        				byte[] b = new byte[fis.available()];
+        				fis.read(b);
+        				response.setCharacterEncoding("utf-8");
+        				response.setHeader("Content-Disposition", "attachment; filename=" + createExcelname + "");
+        				ServletOutputStream out = response.getOutputStream();
+        				out.write(b);
+        				out.flush();
+        				out.close();
+        				if (fis != null) {
+        					fis.close();
+        				}
+        				f.delete();
+//        				message = "success";
+        			} catch (Exception e) {
+        				e.printStackTrace();
+        			}
+        			
+        		}
             }
         } catch (IOException e) {
 //            mLogger.error(e.toString(), e);
@@ -437,7 +474,9 @@ public class ExcelUtil {
      * @param pattern   如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
      */
     public static <T> void exportExcel(List<ExcelSheet<T>> sheets, String filePath, String pattern) {
-        if (CollectionUtils.isEmpty(sheets)) {
+        
+    	
+    	if (CollectionUtils.isEmpty(sheets)) {
             return;
         }
         try {
@@ -447,7 +486,7 @@ public class ExcelUtil {
                 for (ExcelSheet<T> sheetInfo : sheets) {
                     // 生成一个表格
                     Sheet sheet = workbook.createSheet(sheetInfo.getSheetName());
-                    write2Sheet(sheet, sheetInfo.getHeaders(), sheetInfo.getDataset(), pattern);
+//                    write2Sheet(sheet, sheetInfo.getHeaders(), sheetInfo.getDataset(), pattern);
                 }
                 OutputStream out = new FileOutputStream(new File(filePath));
                 workbook.write(out);
@@ -522,6 +561,7 @@ public class ExcelUtil {
                 }
             } else { // row data is vo
                 // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
+            	System.out.println("执行遍历操作...");
                 Field[] fields = t.getClass().getDeclaredFields();
                 for (int i = 0; i < fields.length; i++) {
                     Cell cell = row.createCell(i);
@@ -532,10 +572,11 @@ public class ExcelUtil {
                     try {
                         Class<?> tClazz = t.getClass();
                         Method getMethod = tClazz.getMethod(getMethodName, new Class[] {});
-                        Object value = getMethod.invoke(t, new Object[] {});
+                        Object value = getMethod.invoke(t, new Object[] {});                    
                         String textValue = null;
                         if (value instanceof Integer) {
                             int intValue = (Integer) value;
+                            System.out.println(intValue);
                             cell.setCellValue(intValue);
                         } else if (value instanceof Float) {
                             float fValue = (Float) value;
@@ -553,16 +594,20 @@ public class ExcelUtil {
                             Date date = (Date) value;
                             SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                             textValue = sdf.format(date);
-                        } else {
+                        } else if(value!=null) {
                             // 其它数据类型都当作字符串简单处理
-                            textValue = value.toString();
+                            //防止出现空指针异常
+                            	textValue = value.toString();                            	
+                            	cell.setCellValue(textValue); 
+                            	
                         }
-                        if (textValue != null) {
-                            // HSSFRichTextString richString = new
-                            // HSSFRichTextString(textValue);
-                            cell.setCellValue(textValue);
-                        } else {
+//                        else if (textValue != null) {
+//                            // HSSFRichTextString richString = new
+//                            // HSSFRichTextString(textValue);                            
+//                        } 
+                        else {                       	
                             cell.setCellValue(StringUtils.EMPTY);
+                            System.out.println("空...");
                         }
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();

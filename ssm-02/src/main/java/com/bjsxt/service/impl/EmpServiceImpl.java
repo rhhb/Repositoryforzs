@@ -2,6 +2,7 @@ package com.bjsxt.service.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +49,7 @@ public class EmpServiceImpl implements EmpService{
 	}
 
 	@Override
-	public List<Emp> selgetAll() {
+	public Collection<Emp> selgetAll() {
 		System.out.println("调用业务层实现方法");
 		return empMapper.selgetAll() ;
 		

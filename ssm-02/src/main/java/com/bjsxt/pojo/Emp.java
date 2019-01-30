@@ -21,18 +21,6 @@ public class Emp  {
 	private String email;
 	@CustomTag(desc="部门id")
 	private String dept_id;
-	
-	public Emp() {
-		super();
-	}
-	public Emp(int id, String name, String sex, String email, String dept_id) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.sex = sex;
-		this.email = email;
-		this.dept_id = dept_id;
-	}
 	public int getId() {
 		return id;
 	}

@@ -1,6 +1,7 @@
 package com.bjsxt.controller;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +61,16 @@ public class EmpController {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html,charset=utf-8");
-		List<Emp> list = empSericeImpl.selgetAll();
-		String tilte = "emp表";
-		System.out.println("控制层.......");
+		 Collection<Emp> dataset = empSericeImpl.selgetAll();
+		 
+		System.out.println("控制层*****");
+		System.out.println(dataset);
+//		String tilte = "emp表";
+//		System.out.println("控制层.......");
 		String[] headers = {"id","name","sex","email","depr_id"};
-		String[] Col = {"id","name","sex","email","depr_id"};
+//		String[] Col = {"id","name","sex","email","depr_id"};
 		
-		String message = ExcelUtil.OutExcel(request, response, list, tilte);
+		String message = ExcelUtil.exportExcel(request, response, headers, dataset);;
 		System.out.println("执行完成....");
 		if (message.equals("fail")) {
 			ServletOutputStream out = response.getOutputStream();

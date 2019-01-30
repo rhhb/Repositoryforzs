@@ -12,7 +12,6 @@ com\bjsxt\util\ExcelUtil.class
 com\bjsxt\service\impl\EmpServiceImpl.class
 com\bjsxt\pojo\Role.class
 com\bjsxt\controller\RoleController.class
-com\bjsxt\controller\EmpController.class
 com\bjsxt\controller\UsersController.class
 com\bjsxt\excel\util\ExcelUtil.class
 com\bjsxt\mapper\EmpMapper.class
