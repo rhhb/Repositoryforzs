@@ -16,4 +16,7 @@ public interface RoleService {
 	List<Menu> showPrivilege(int roleid);
 	
 	Collection<Role> showAll();
+	
+	int insRole(Role role);
+	int delRole(int[] ids);
 }

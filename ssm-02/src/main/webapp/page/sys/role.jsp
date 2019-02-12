@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>至尊管理系统</title>
 </head>
 <body>
 <script type="text/javascript">
@@ -53,11 +53,74 @@ $(function(){
 	    toolbar: [{
 			iconCls: 'icon-add',
 			text:'增加',
-			handler: function(){alert('正在建设中')}
+			handler: function(){
+				if($("#role_table").datagrid("getSelections").length==0){
+					$('#role_dialog').dialog({
+						title: '新增角色',
+						width: 400,    
+					    height: 200,    
+					    closed: false,    
+					    cache: false,
+						href: 'sys/role_add.jsp',
+						modal: true
+					});
+				}else{
+					$.messager.alert("系统信息","请勿选择<b style='color:red;'>行</b>")
+				}
+				
+			}
 		},'-',{
 			iconCls: 'icon-remove',
 			text:'删除',
-			handler: function(){alert('正在建设中')}
+			handler: function(){
+				if($("#role_table").datagrid("getSelections").length>0){
+					var data = $("#role_table").datagrid("getSelections");
+					if(data.length>0){
+						$.messager.confirm('确认','您确认想要删除记录吗？',function(r){    
+						    if (r){ 
+						    	var rid=[];
+                                for(var i=0;i<data.length;i++)
+                                    {
+                                    rid[i]=data[i].id;
+                                    }                               
+//                                 $.ajax({
+//                                 	type:"post",
+//                                 	url:"roleRemove",
+//                                 	data:'{"rid":rid}',
+//                                 	contextType:"application/json;charset=utf-8",
+//                                 	success:function(data){
+//                                 		alert(data.rid);
+//                                 	}
+//                                 });
+                                
+                                
+//                                 $.post("roleRemove",data,
+// 							          function(data){
+// 							          alert(data); // John							          
+// 							          //  2pm
+// 							          }, "json")
+                                
+                                $.get("roleRemove?rid="+rid,
+                                        function(rtn){
+//                                 	alert(rtn);
+//                                     var msg=eval("("+rtn+")");
+                                    
+                                    if(rtn>0)                                       
+                                    $('#role_table').datagrid('reload');                                       
+                                    $.messager.show({title:"提示",msg:'删除成功'});                                
+                                });
+						           
+						    }    
+						});
+					}
+				}
+				
+				else{
+					$.messager.alert("系统信息","请选择删除<b style='color:red;'>行</b>")
+				}   
+					
+				
+			}
 		},'-',{
 			iconCls: 'icon-edit',
 			text:'修改',

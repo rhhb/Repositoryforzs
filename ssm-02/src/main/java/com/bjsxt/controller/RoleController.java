@@ -2,8 +2,12 @@ package com.bjsxt.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -12,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +25,8 @@ import com.bjsxt.pojo.EasyUIDatagrid;
 import com.bjsxt.pojo.Menu;
 import com.bjsxt.pojo.Role;
 import com.bjsxt.service.RoleService;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("page")
 public class RoleController {
@@ -49,9 +55,9 @@ public class RoleController {
 	public String roleExportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		try {
-			request.setCharacterEncoding("UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/html,charset=utf-8");
+//			request.setCharacterEncoding("UTF-8");
+//			response.setCharacterEncoding("UTF-8");
+//			response.setContentType("text/html,charset=utf-8");
 			Collection<Role> dataset = roleServiceImpl.showAll();
 			String[] headers = {"id","角色名称","排序id","备注"}; 
 			String message = ExcelUtil.exportExcel(request, response, headers, dataset);;				
@@ -67,5 +73,33 @@ public class RoleController {
 			e.printStackTrace();
 		}
 		return "success";
+	}
+	
+	//角色新增
+	@RequestMapping("roleAdd")
+	@ResponseBody
+	public int insRole(Role role) {
+		int index = roleServiceImpl.insRole(role);
+		return index;
+	}
+	@RequestMapping(value="roleRemove")
+	@ResponseBody
+	public int delRole(HttpServletRequest req, HttpServletResponse resp) {
+	//,method = RequestMethod.POST,consumes = "application/json"	
+		String obj = req.getParameter("rid");
+		System.out.println(obj);
+		if(obj!=null) {
+		String[] sp = obj.split(",");
+		System.out.println(sp.length);
+		int in[] = new int[sp.length];
+			for (int i = 0; i < sp.length; i++) {
+				in[i] = Integer.parseInt(sp[i]);				
+				}
+			String str = Arrays.toString(in);
+		int index = roleServiceImpl.delRole(in);		
+		return index;
+		}else {
+			return 0;
+		}
 	}
 }

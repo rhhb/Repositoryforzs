@@ -21,7 +21,6 @@ public class RoleServiceImpl implements RoleService {
 	private RoleMapper roleMapper;
 	@Resource
 	private MenuMapper menuMapper;
-
 	@Override
 	public EasyUIDatagrid showRole(int pageSize, int pageNumber) {
 		EasyUIDatagrid datagrid = new EasyUIDatagrid();
@@ -69,6 +68,18 @@ public class RoleServiceImpl implements RoleService {
 	public Collection<Role> showAll() {
 		// TODO Auto-generated method stub
 		return roleMapper.showAll();
+	}
+
+	@Override
+	public int insRole(Role role) {
+		int index = roleMapper.insRole(role);
+		return index;
+	}
+
+	@Override
+	public int delRole(int[] ids) {
+		int index = roleMapper.delRole(ids);
+		return index;
 	}
 	
 }

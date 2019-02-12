@@ -58,7 +58,11 @@
 			 <artifactId>jxl</artifactId>
 			 <version>${jxl-version}</version>
 		</dependency>
-		
+		<dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-lgpl</artifactId>
+            <version>1.8.1</version>
+         </dependency>
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -75,6 +79,12 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectjweaver-version}</version>
 		</dependency>
+		<!-- json支持包 -->
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.32</version>
+		</dependency>		
 		<!-- mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
