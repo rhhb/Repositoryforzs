@@ -341,8 +341,8 @@ public class ExcelUtil {
      *                  javabean属性的数据类型有基本数据类型及String,Date,String[],Double[]
      * @param filePath  excel文件输出路径     
      */
-    public static <T> String exportExcel(HttpServletRequest request, HttpServletResponse response,String[] headers, Collection<T> dataset) {
-        exportExcel(request,response,headers, dataset, null);
+    public static <T> String exportExcel(HttpServletRequest request, HttpServletResponse response,String[] headers, Collection<T> dataset) {        
+    	exportExcel(request,response,headers, dataset, null);
 		return "success";
     }
 

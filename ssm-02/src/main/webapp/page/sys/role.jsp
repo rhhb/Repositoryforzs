@@ -46,7 +46,7 @@ $(function(){
 	        }
 	    ]],
 	    pagination:true,
-	    pageList:[2,4,6],
+	    pageList:[5,10,15,20,30],
 	    fitColumns:true,
 	    striped:true,
 	    rownumbers:true,
@@ -75,9 +75,11 @@ $(function(){
 			handler: function(){
 				if($("#role_table").datagrid("getSelections").length>0){
 					var data = $("#role_table").datagrid("getSelections");
+// 					var ids = getSelectionsIds();
 					if(data.length>0){
 						$.messager.confirm('确认','您确认想要删除记录吗？',function(r){    
 						    if (r){ 
+// 						    	var params = {"ids":ids};
 						    	var rid=[];
                                 for(var i=0;i<data.length;i++)
                                     {
@@ -94,17 +96,16 @@ $(function(){
 //                                 });
                                 
                                 
-//                                 $.post("roleRemove",data,
+//                                 $.post("roleRemove",params,
 // 							          function(data){
-// 							          alert(data); // John							          
-// 							          //  2pm
-// 							          }, "json")
+// 							          if(data>0){
+// 							        	  $.messager.show({title:"提示",msg:'删除成功'}); 
+// 							        	  $('#role_table').datagrid('reload'); 
+// 							          }						          							          
+// 							          });
                                 
                                 $.get("roleRemove?rid="+rid,
-                                        function(rtn){
-//                                 	alert(rtn);
-//                                     var msg=eval("("+rtn+")");
-                                    
+                                        function(rtn){                                  
                                     if(rtn>0)                                       
                                     $('#role_table').datagrid('reload');                                       
                                     $.messager.show({title:"提示",msg:'删除成功'});                                
@@ -158,26 +159,36 @@ $(function(){
 					    closed: false,    
 					    cache: false,
 						href: 'sys/role_excel.jsp',
-							modal: true
+						modal: true
 					});
 				}else{
 					$.messager.alert("系统信息","请勿选择<b style='color:red;'>行</b>")
 				}
 					
-				
-				
-// 					alert('正在建设中')
-// 				var info=$("#role_table").datagrid("getData");
-				//这里举例获取某列所有数据的和，当然你也可以进行其它处理或遍历操作
-// 				var total=0;
-// 				for(var i=0;i<info.rows.length;i++){
-// 					total=info.rows[i].name;  //假设Table中有列名number
-// 					alert(total);
-// 				}
-// 				$("#AllAmount").text("total")
-
-
-				
+// 				if($("#role_table").datagrid("getSelections").length<1){
+// 					var data = $("#role_table").datagrid("getSelections");
+// 					if(data.length<1){
+// 						$.messager.confirm('确认','您确认想要导出到excel吗？',function(r){    
+// 						    if (r){                               
+//                                 $.post("role_excel",
+// 							          function(data){
+// 							          if(data=="success"){
+// 							        	  $.messager.show({title:"提示",msg:'导出成功'}); 							        	   
+// 							          }						          							          
+// 							          });
+                                
+// //                                 $.get("role_excel",
+// //                                         function(rtn){                                  
+// //                                     if(rtn=="success")                                                                                                                
+// //                                     $.messager.show({title:"提示",msg:'导出成功'});                                
+// //                                 });						           
+// 						    }    
+// 						});
+// 					}
+// 				}				
+// 				else{
+// 					$.messager.alert("系统信息","请勿选择<b style='color:red;'>行</b>")
+// 				} 				
 			}
 		}]
 

@@ -16,7 +16,8 @@ $(function(){
 		        // do some check    
 		        // return false to prevent submit;    
 		    },    
-		    success:function(data){    
+		    success:function(data){
+		    	alert(data);
 		       	if(data=="success"){
 		       		$.messager.show({
 		       			title:'系统消息',
@@ -32,6 +33,12 @@ $(function(){
 		       	}
 		    }    
 		}); 
+	})
+	
+	$("#role_excel_cancel").click(function(){
+		//弹出框关闭
+   		$("#role_dialog").dialog("close");
+   		
 	})
 });
 </script>
@@ -49,10 +56,11 @@ $(function(){
 		<td ></td>	
 	</tr>
 	<tr>
-		<td><input type="reset" class="easyui-linkbutton" value="取消"></td>	
+		
 		<td > 
 		<a id="role_excel_submit" href="#" class="easyui-linkbutton" >导出</a> 
 		</td>
+		<td><a id="role_excel_cancel" href="#" class="easyui-linkbutton" >取消</a></td>	
 	</tr>
 </table>
 </div>	

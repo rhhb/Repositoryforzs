@@ -34,7 +34,7 @@ public class RoleController {
 	private RoleService roleServiceImpl;
 	@RequestMapping("showRole")
 	@ResponseBody
-	public EasyUIDatagrid showRole(@RequestParam(defaultValue="2")int rows,@RequestParam(defaultValue="1")int page){
+	public EasyUIDatagrid showRole(@RequestParam(defaultValue="5")int rows,@RequestParam(defaultValue="1")int page){
 		return roleServiceImpl.showRole(rows, page);
 	}
 	
@@ -60,8 +60,9 @@ public class RoleController {
 //			response.setContentType("text/html,charset=utf-8");
 			Collection<Role> dataset = roleServiceImpl.showAll();
 			String[] headers = {"id","角色名称","排序id","备注"}; 
-			String message = ExcelUtil.exportExcel(request, response, headers, dataset);;				
-			if (message.equals("fail")) {
+			String message = ExcelUtil.exportExcel(request, response, headers, dataset);
+			System.out.println(message);
+			if (!message.equals("success")) {
 				ServletOutputStream out = response.getOutputStream();
 				message = "导出失败，请重试";
 				String s = "<!DOCTYPE HTML><html><head><script>alert('" + message + "');</script></head><body></body></html>";
@@ -87,10 +88,8 @@ public class RoleController {
 	public int delRole(HttpServletRequest req, HttpServletResponse resp) {
 	//,method = RequestMethod.POST,consumes = "application/json"	
 		String obj = req.getParameter("rid");
-		System.out.println(obj);
 		if(obj!=null) {
 		String[] sp = obj.split(",");
-		System.out.println(sp.length);
 		int in[] = new int[sp.length];
 			for (int i = 0; i < sp.length; i++) {
 				in[i] = Integer.parseInt(sp[i]);				
