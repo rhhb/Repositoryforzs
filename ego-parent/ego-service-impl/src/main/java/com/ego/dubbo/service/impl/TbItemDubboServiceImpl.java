@@ -8,6 +8,7 @@ import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.dubbo.service.TbItemDubboService;
 import com.ego.mapper.TbItemMapper;
 import com.ego.pojo.TbItem;
+import com.ego.pojo.TbItemDesc;
 import com.ego.pojo.TbItemExample;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -33,5 +34,10 @@ public class TbItemDubboServiceImpl implements TbItemDubboService {
 	@Override
 	public int updItemStatus(TbItem tbItem) {
 		return tbItemMapper.updateByPrimaryKeySelective(tbItem);
+	}
+	@Override
+	public int insTbItemDesc(TbItem tbItem, TbItemDesc tbItemDesc) {
+		
+		return 0;
 	}
 }

@@ -8,6 +8,10 @@
   <artifactId>ego-manage</artifactId>
   <packaging>war</packaging>
   <dependencies>
+  		<dependency>
+		  	<groupId>javax.annotation</groupId>  
+		    <artifactId>jsr250-api</artifactId> 
+		  </dependency>
 		<!-- 分页插件 -->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>

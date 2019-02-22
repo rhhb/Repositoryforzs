@@ -2,6 +2,7 @@ package com.ego.dubbo.service;
 
 import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.pojo.TbItem;
+import com.ego.pojo.TbItemDesc;
 
 public interface TbItemDubboService {
 	/**
@@ -18,4 +19,11 @@ public interface TbItemDubboService {
 	 * @return
 	 */
 	int updItemStatus(TbItem tbItem);
+	/**
+	 * 新增包含商品表和商品描述表
+	 * @param tbItem
+	 * @param tbItemDesc
+	 * @return
+	 */
+	int insTbItemDesc(TbItem tbItem,TbItemDesc tbItemDesc);
 }
