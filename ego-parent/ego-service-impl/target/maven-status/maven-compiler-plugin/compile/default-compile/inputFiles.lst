@@ -3,12 +3,13 @@ D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\test\Te
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbItemParamMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbItemMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbOrderShippingMapper.java
-D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\dubbo\service\impl\TbItemCatServiceImpl.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbItemDescMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbItemParamItemMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbOrderItemMapper.java
+D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\dubbo\service\impl\TbItemCatDubboServiceImpl.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbContentCategoryMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbContentMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbOrderMapper.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\dubbo\service\impl\TbItemDubboServiceImpl.java
+D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\dubbo\service\impl\TbItemParamDubboServiceImpl.java
 D:\git\Repositoryforzs\ego-parent\ego-service-impl\src\main\java\com\ego\mapper\TbItemCatMapper.java
