@@ -11,6 +11,7 @@ import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.commons.pojo.EgoResult;
 import com.ego.manage.service.TbItemParamService;
 import com.ego.pojo.TbItemParam;
+import com.ego.pojo.TbItemParamItem;
 
 @Controller
 public class TbItemParamController {
@@ -72,7 +73,7 @@ public class TbItemParamController {
 	@ResponseBody
 	public EgoResult showItemParam(@PathVariable long id) {
 		EgoResult er = new EgoResult();
-		TbItemParam param = tbItemParamServiceImpl.showItemParam(id);
+		TbItemParamItem param = tbItemParamServiceImpl.showItemParam(id);
 		if(param!=null) {
 			er.setStatus(200);
 			er.setData(param);

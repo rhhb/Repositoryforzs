@@ -14,6 +14,7 @@ import com.ego.dubbo.service.TbItemParamDubboService;
 import com.ego.manage.pojo.TbItemParamChild;
 import com.ego.manage.service.TbItemParamService;
 import com.ego.pojo.TbItemParam;
+import com.ego.pojo.TbItemParamItem;
 @Service
 public class TbItemParamServiceImpl implements TbItemParamService{
 	@Reference
@@ -25,9 +26,9 @@ public class TbItemParamServiceImpl implements TbItemParamService{
 		EasyUIDataGrid datagrid = tbItemParamDubboServiceImpl.showPage(page, rows);
 		List<TbItemParam> list =(List<TbItemParam>) datagrid.getRows();
 		List<TbItemParamChild> listchild = new ArrayList<>();
-		System.out.println("*****");
+		
 		System.out.println(list.size());
-		System.out.println("*****");
+	
 		for(TbItemParam param : list) {
 			TbItemParamChild child = new TbItemParamChild();
 			child.setCreated(param.getCreated());
@@ -38,7 +39,7 @@ public class TbItemParamServiceImpl implements TbItemParamService{
 			child.setUpdated(param.getUpdated());
 			listchild.add(child);
 		}
-		System.out.println("*****....");
+		
 		datagrid.setRows(listchild);
 		return datagrid;
 	}
@@ -71,7 +72,7 @@ public class TbItemParamServiceImpl implements TbItemParamService{
 		return er;
 	}
 	@Override
-	public TbItemParam showItemParam(long id) {
+	public TbItemParamItem showItemParam(long id) {
 		
 		return tbItemParamDubboServiceImpl.selByItemId(id);
 	}

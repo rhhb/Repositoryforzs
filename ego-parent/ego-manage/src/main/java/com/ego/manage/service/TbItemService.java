@@ -3,6 +3,7 @@ package com.ego.manage.service;
 import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.pojo.TbItem;
 import com.ego.pojo.TbItemDesc;
+import com.ego.pojo.TbItemParamItem;
 
 public interface TbItemService {
 	/**
@@ -32,5 +33,12 @@ public interface TbItemService {
 	 * @return
 	 */
 	TbItemDesc show(long id);
-	
+	/**
+	 * 修改商品相关信息
+	 * @param tbItem
+	 * @param tbItemDesc
+	 * @param paramItem
+	 * @return
+	 */
+	int updateItem(TbItem tbItem, String desc,String itemParams,String itemParamId) throws Exception;
 }

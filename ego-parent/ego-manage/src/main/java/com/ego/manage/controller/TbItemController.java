@@ -114,4 +114,21 @@ public class TbItemController {
 		}
 		return er;
 	}
+	@RequestMapping("rest/item/update")
+	@ResponseBody
+	public EgoResult updateItem(TbItem tbItem, String desc,String itemParams,String itemParamId) {
+		EgoResult er = new EgoResult();
+		int index = 0;
+		try {
+			index = tbItemServiceImpl.updateItem(tbItem, desc, itemParams, itemParamId);
+			if(index==1) {
+				er.setStatus(200);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			er.setData(e.getMessage());
+		}
+		return er;
+	}
 }

@@ -68,6 +68,24 @@ public class TbItemDubboServiceImpl implements TbItemDubboService {
 	public TbItemDesc selByDescId(long id) {
 		return tbItemDescMapper.selectByPrimaryKey(id);
 	}
+	@Override
+	public int updItemDescParam(TbItem tbItem, TbItemDesc tbItemDesc, TbItemParamItem paramItem) throws Exception {
+		int index = 0;
+		try {
+			index+= tbItemMapper.updateByPrimaryKeySelective(tbItem);
+			index+= tbItemDescMapper.updateByPrimaryKeySelective(tbItemDesc);
+			index+= tbItemParamItemMapper.updateByPrimaryKeySelective(paramItem);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		if(index==3) {
+			return 1;
+		}else {
+			System.out.println(index);
+			throw new Exception("更新失败,还原数据");
+		}
+		
+	}
 	
 	
 }

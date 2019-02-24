@@ -50,7 +50,7 @@ public class TbItemServiceImpl implements TbItemService{
 		itemdesc.setUpdated(data);
 		itemdesc.setItemId(id);
 		TbItemParamItem paramItem = new TbItemParamItem();
-		paramItem.setId(id);
+		paramItem.setItemId(id);;
 		paramItem.setCreated(data);
 		paramItem.setUpdated(data);
 		paramItem.setParamData(itemParams);
@@ -64,5 +64,36 @@ public class TbItemServiceImpl implements TbItemService{
 	public TbItemDesc show(long id) {
 		
 		return tbItemDubboServiceImpl.selByDescId(id);
+	}
+	@Override
+	public int updateItem(TbItem tbItem, String desc,String itemParams,String itemParamId) throws Exception {
+		TbItem item = new TbItem();
+		Date data = new Date();
+		item.setId(tbItem.getId());
+		item.setBarcode(tbItem.getBarcode());
+		item.setCid(tbItem.getCid());
+		item.setCreated(tbItem.getCreated());
+		item.setImage(tbItem.getImage());
+		item.setNum(tbItem.getNum());
+		item.setPrice(tbItem.getPrice());
+		item.setSellPoint(tbItem.getSellPoint());
+		item.setStatus(tbItem.getStatus());
+		item.setTitle(tbItem.getTitle());
+		item.setUpdated(data);
+		
+		TbItemDesc itemdesc = new TbItemDesc();
+		itemdesc.setCreated(tbItem.getCreated());
+		itemdesc.setItemDesc(desc);
+		itemdesc.setItemId(tbItem.getId());
+		itemdesc.setUpdated(data);
+		TbItemParamItem param = new TbItemParamItem();
+		param.setParamData(itemParams);
+		param.setCreated(tbItem.getCreated());
+		param.setUpdated(data);
+		param.setId(Long.parseLong(itemParamId));
+		param.setItemId(tbItem.getId());
+		int index=0;
+		index = tbItemDubboServiceImpl.updItemDescParam(item, itemdesc, param);		
+		return index;
 	}
 }

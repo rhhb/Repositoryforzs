@@ -176,5 +176,6 @@
 		<module>ego-service-impl</module>
 		<module>ego-commons</module>
 		<module>ego-manage</module>
+		<module>ego-portal</module>
 	</modules>
 </project>

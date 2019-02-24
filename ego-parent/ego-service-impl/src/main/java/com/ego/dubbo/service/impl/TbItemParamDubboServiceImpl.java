@@ -7,10 +7,13 @@ import javax.annotation.Resource;
 import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.dubbo.service.TbItemParamDubboService;
 import com.ego.mapper.TbItemMapper;
+import com.ego.mapper.TbItemParamItemMapper;
 import com.ego.mapper.TbItemParamMapper;
 import com.ego.pojo.TbItem;
 import com.ego.pojo.TbItemParam;
 import com.ego.pojo.TbItemParamExample;
+import com.ego.pojo.TbItemParamItem;
+import com.ego.pojo.TbItemParamItemExample;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -19,6 +22,8 @@ public class TbItemParamDubboServiceImpl implements TbItemParamDubboService{
 	private TbItemParamMapper tbItemParamMapper;
 	@Resource
 	private TbItemMapper tbItemMapper;
+	@Resource
+	private TbItemParamItemMapper tbItemParamItemMapper;
 	@Override
 	public EasyUIDataGrid showPage(int page, int rows) {
 		//先设置分页条件
@@ -64,10 +69,16 @@ public class TbItemParamDubboServiceImpl implements TbItemParamDubboService{
 		
 		return tbItemParamMapper.insertSelective(param);
 	}
+	
 	@Override
-	public TbItemParam selByItemId(long id) {
-		TbItem tbItem = tbItemMapper.selectByPrimaryKey(id);
-		TbItemParam param = tbItemParamMapper.selectByPrimaryKey(tbItem.getCid());
-		return param;
+	public TbItemParamItem selByItemId(long id) {
+		TbItemParamItemExample itemExample = new TbItemParamItemExample();
+		itemExample.createCriteria().andItemIdEqualTo(id);
+		List<TbItemParamItem> list = tbItemParamItemMapper.selectByExampleWithBLOBs(itemExample);
+		System.out.println(list);
+		if(list!=null&&list.size()>0) {
+			return list.get(0);
+		}
+		return null;
 	}
 }

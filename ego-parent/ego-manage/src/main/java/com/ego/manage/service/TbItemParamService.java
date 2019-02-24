@@ -3,6 +3,7 @@ package com.ego.manage.service;
 import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.commons.pojo.EgoResult;
 import com.ego.pojo.TbItemParam;
+import com.ego.pojo.TbItemParamItem;
 
 public interface TbItemParamService {
 	/**
@@ -35,5 +36,5 @@ public interface TbItemParamService {
 	 * @param id
 	 * @return
 	 */
-	TbItemParam showItemParam(long id);
+	TbItemParamItem showItemParam(long id);
 }

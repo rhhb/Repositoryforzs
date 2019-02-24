@@ -2,6 +2,7 @@ package com.ego.dubbo.service;
 
 import com.ego.commons.pojo.EasyUIDataGrid;
 import com.ego.pojo.TbItemParam;
+import com.ego.pojo.TbItemParamItem;
 
 public interface TbItemParamDubboService {
 	/**
@@ -34,5 +35,5 @@ public interface TbItemParamDubboService {
 	 * @param id
 	 * @return
 	 */
-	TbItemParam selByItemId(long id);
+	TbItemParamItem selByItemId(long id);
 }
