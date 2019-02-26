@@ -177,5 +177,6 @@
 		<module>ego-commons</module>
 		<module>ego-manage</module>
 		<module>ego-portal</module>
+		<module>ego-item</module>
 	</modules>
 </project>
